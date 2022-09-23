@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/Tallispt/drivencracy#readme",
   "dependencies": {
+    "@joi/date": "^2.1.0",
     "cors": "^2.8.5",
     "dayjs": "^1.11.5",
     "dotenv": "^16.0.2",

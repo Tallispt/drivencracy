@@ -1,6 +1,6 @@
 import express from 'express';
 
-import { handleVote, showResult } from '../controllers/vote.controller';
+import { handleVote, showResult } from '../controllers/vote.controller.js';
 
 const router = express.Router()
 

@@ -1,10 +1,16 @@
 import dayjs from 'dayjs';
-import joi from 'joi'
+import DateExtension from '@joi/date';
+import JoiImport from 'joi';
+
 import db from '../database/database.js';
+import { ObjectId } from 'mongodb';
+
+
+const joi = JoiImport.extend(DateExtension);
 
 const titleSchema = joi.object({
     title: joi.string().min(1).required(),
-    expireAt: joi.date().iso()
+    expireAt: joi.date().format('YYYY-MM-DD HH:mm')
 })
 
 const idSchema = joi.object({
@@ -54,7 +60,15 @@ const findPoll = async (req, res) => {
 
 const deletePoll = async (req, res) => {
     const { id } = req.params
+
+    const validation = idSchema.validate({ id })
+
+    if (validation.error) return res.status(422).send(validation.error.details[0].message)
+
     try {
+        const pollExists = await db.collection('polls').findOne({ _id: ObjectId(id) })
+        if (!pollExists) return res.sendStatus(404)
+
         await db.collection('polls').deleteOne({ _id: ObjectId(id) })
     } catch (error) {
         console.log(error);

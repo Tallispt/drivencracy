@@ -6,6 +6,6 @@ const router = express.Router()
 
 router.post('/poll', createPoll)
 router.get('/poll', findPoll)
-router.delete('/poll:id', deletePoll)
+router.delete('/poll/:id', deletePoll)
 
 export default router

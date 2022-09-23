@@ -10,12 +10,16 @@ const idSchema = joi.object({
 const handleVote = async (req, res) => {
     const { id } = req.params
 
+    const validation = idSchema.validate({ id })
+
+    if (validation.error) return res.status(422).send(validation.error.details[0].message)
+
     try {
         const choiceExists = await db.collection('choices').findOne({ _id: ObjectId(id) })
         if (!choiceExists) return res.sendStatus(404)
-        console.log(choiceExists)
 
         const poll = await db.collection('polls').findOne({ _id: ObjectId(choiceExists.pollId) })
+
         const isExpired = dayjs().isAfter(dayjs(poll.expireAt))
         if (isExpired) return res.sendStatus(403)
 
@@ -36,6 +40,10 @@ const handleVote = async (req, res) => {
 const showResult = async (req, res) => {
 
     const { id } = req.params
+
+    const validation = idSchema.validate({ id })
+
+    if (validation.error) return res.status(422).send(validation.error.details[0].message)
 
     try {
         const pollExists = await db.collection('polls').findOne({ _id: ObjectId(id) })
